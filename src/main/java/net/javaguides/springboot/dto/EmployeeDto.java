@@ -1,33 +1,30 @@
-package net.javaguides.springboot.entity;
+package net.javaguides.springboot.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.ToString;
 
 /**
- * Employee
+ * EmployeeDto
  * <p>
  * Created by IntelliJ, Spring Framework Guru.
  *
  * @author architecture - raul.perez.vicente@gmail.com
- * @version 06/10/2026 - 13:37
+ * @version 06/10/2026 - 13:49
  * @since 1.25
  */
-@Document(collation = "employees")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Employee {
+@ToString
+public class EmployeeDto {
 
-    @Id
     private String id;
-
     private String firstName;
     private String lastName;
     private String email;
