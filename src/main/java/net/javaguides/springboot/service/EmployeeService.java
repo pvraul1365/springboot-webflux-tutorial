@@ -16,4 +16,6 @@ public interface EmployeeService {
 
     Mono<EmployeeDto> saveEmployee(EmployeeDto employeeDto);
 
+    Mono<EmployeeDto> getEmployeeById(String employeeId);
+
 }

@@ -7,6 +7,8 @@ import net.javaguides.springboot.repository.EmployeeRepository;
 import net.javaguides.springboot.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,5 +36,10 @@ public class EmployeeController {
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<EmployeeDto> saveEmployee(@RequestBody final EmployeeDto employeeDto) {
         return employeeService.saveEmployee(employeeDto);
+    }
+
+    @GetMapping("/{id}")
+    public Mono<EmployeeDto> getEmployeeById(@PathVariable final String id) {
+        return employeeService.getEmployeeById(id);
     }
 }
