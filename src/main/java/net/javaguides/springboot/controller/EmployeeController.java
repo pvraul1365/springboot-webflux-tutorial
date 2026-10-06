@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -41,5 +42,10 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public Mono<EmployeeDto> getEmployeeById(@PathVariable final String id) {
         return employeeService.getEmployeeById(id);
+    }
+
+    @GetMapping
+    public Flux<EmployeeDto> getAllEmployees() {
+        return employeeService.getAllEmployees();
     }
 }
