@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * @version 06/10/2026 - 13:37
  * @since 1.25
  */
-@Document(collation = "employees")
+@Document(collection = "employees")
 @Getter
 @Setter
 @NoArgsConstructor
