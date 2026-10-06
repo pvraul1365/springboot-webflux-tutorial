@@ -20,4 +20,6 @@ public interface EmployeeService {
     Mono<EmployeeDto> getEmployeeById(String employeeId);
 
     Flux<EmployeeDto> getAllEmployees();
+
+    Mono<EmployeeDto> updateEmployee(EmployeeDto employeeDto, String employeeId);
 }

@@ -51,4 +51,19 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .map(EmployeeMapper::mapToDto)
                 .switchIfEmpty(Flux.empty());
     }
+
+    @Override
+    public Mono<EmployeeDto> updateEmployee(final EmployeeDto employeeDto, final String employeeId) {
+        Mono<Employee> employeeMono = employeeRepository.findById(employeeId);
+
+        Mono<Employee> updatedEmployee = employeeMono.flatMap(existingEmployee -> {
+            existingEmployee.setFirstName(employeeDto.getFirstName());
+            existingEmployee.setLastName(employeeDto.getLastName());
+            existingEmployee.setEmail(employeeDto.getEmail());
+
+            return employeeRepository.save(existingEmployee);
+        });
+
+        return updatedEmployee.map(EmployeeMapper::mapToDto);
+    }
 }
