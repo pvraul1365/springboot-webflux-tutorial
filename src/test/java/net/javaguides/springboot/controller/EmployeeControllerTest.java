@@ -53,4 +53,33 @@ class EmployeeControllerTest {
                 .jsonPath("$.lastName").isEqualTo(employeeDto.getLastName())
                 .jsonPath("$.email").isEqualTo(employeeDto.getEmail());
     }
+
+    @Test
+    void givenEmployeeId_whenGetEmployee_thenReturnEmployeeObject() {
+
+        // given - precondition or setup
+        String employeeId = "6ac4f03726c4da05a9c36cf8";
+        EmployeeDto employeeDto = EmployeeDto.builder()
+                .id(employeeId)
+                .firstName("John")
+                .lastName("Doe")
+                .email("john.doe@example.com")
+                .build();
+
+        BDDMockito.given(employeeService.getEmployeeById(employeeId))
+                .willReturn(Mono.just(employeeDto));
+
+        // when - action or the behaviour that we are going to test
+        WebTestClient.ResponseSpec response = webTestClient.get()
+                .uri("/api/employees/{id}", employeeId)
+                .exchange();
+
+        // then - verify the output
+        response.expectStatus().isOk()
+                .expectBody()
+                .consumeWith(System.out::println)
+                .jsonPath("$.firstName").isEqualTo(employeeDto.getFirstName())
+                .jsonPath("$.lastName").isEqualTo(employeeDto.getLastName())
+                .jsonPath("$.email").isEqualTo(employeeDto.getEmail());
+    }
 }
