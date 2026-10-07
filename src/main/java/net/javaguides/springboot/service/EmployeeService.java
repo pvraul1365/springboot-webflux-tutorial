@@ -22,4 +22,6 @@ public interface EmployeeService {
     Flux<EmployeeDto> getAllEmployees();
 
     Mono<EmployeeDto> updateEmployee(EmployeeDto employeeDto, String employeeId);
+
+    Mono<Void> deleteEmployeeById(String employeeId);
 }

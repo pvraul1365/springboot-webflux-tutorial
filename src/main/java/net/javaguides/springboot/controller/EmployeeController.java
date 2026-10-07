@@ -7,6 +7,7 @@ import net.javaguides.springboot.repository.EmployeeRepository;
 import net.javaguides.springboot.service.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,5 +55,11 @@ public class EmployeeController {
     public Mono<EmployeeDto> updateEmployee(@RequestBody final EmployeeDto employeeDto,
                                             @PathVariable final String id) {
         return employeeService.updateEmployee(employeeDto, id);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> deleteEmployeeById(@PathVariable final String id) {
+        return employeeService.deleteEmployeeById(id);
     }
 }
