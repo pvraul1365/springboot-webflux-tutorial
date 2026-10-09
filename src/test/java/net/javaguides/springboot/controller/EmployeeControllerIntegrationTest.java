@@ -157,7 +157,9 @@ class EmployeeControllerIntegrationTest {
         webTestClient.delete()
                 .uri("/api/employees/{id}", savedEmployee.getId())
                 .exchange()
-                .expectStatus().isNoContent();
+                .expectStatus().isNoContent()
+                .expectBody()
+                .consumeWith(System.out::println);
 
     }
 }
