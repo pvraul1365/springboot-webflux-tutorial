@@ -37,7 +37,7 @@ class EmployeeControllerIntegrationTest {
     @Test
     void testSaveEmployee() {
 
-        EmployeeDto employeeDto = EmployeeDto.builder()
+        var employeeDto = EmployeeDto.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .email("john.doe@example.com")
@@ -62,13 +62,13 @@ class EmployeeControllerIntegrationTest {
     @Test
     void testGetSingleEmployee() {
 
-        EmployeeDto employeeDto = EmployeeDto.builder()
+        var employeeDto = EmployeeDto.builder()
                 .firstName("Meena")
                 .lastName("Fadatare")
                 .email("meena.fadatare@example.com")
                 .build();
 
-        EmployeeDto savedEmployee = employeeService.saveEmployee(employeeDto).block();
+        var savedEmployee = employeeService.saveEmployee(employeeDto).block();
 
         webTestClient.get()
                 .uri("/api/employees/{id}", savedEmployee.getId())
@@ -86,7 +86,7 @@ class EmployeeControllerIntegrationTest {
     @Test
     void testGetAllEmployees() {
 
-        EmployeeDto employeeDto = EmployeeDto.builder()
+        var employeeDto = EmployeeDto.builder()
                 .firstName("Meena")
                 .lastName("Fadatare")
                 .email("meena.fadatare@example.com")
@@ -109,6 +109,38 @@ class EmployeeControllerIntegrationTest {
                 .expectStatus().isOk()
                 .expectBodyList(EmployeeDto.class)
                 .consumeWith(System.out::println);
+
+    }
+
+    @Test
+    void testUpdateEmployee() {
+
+        var employeeDto = EmployeeDto.builder()
+                .firstName("Meena")
+                .lastName("Fadatare")
+                .email("meena.fadatare@example.com")
+                .build();
+
+        var savedEmployee = employeeService.saveEmployee(employeeDto).block();
+
+        var updatedEmployeeDto = EmployeeDto.builder()
+                .firstName("Meena Updated")
+                .lastName("Fadatare Updated")
+                .email("meena.updated@example.com")
+                .build();
+
+        webTestClient.put()
+                .uri("/api/employees/{id}", savedEmployee.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Mono.just(updatedEmployeeDto), EmployeeDto.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(System.out::println)
+                .jsonPath("$.firstName").isEqualTo(updatedEmployeeDto.getFirstName())
+                .jsonPath("$.lastName").isEqualTo(updatedEmployeeDto.getLastName())
+                .jsonPath("$.email").isEqualTo(updatedEmployeeDto.getEmail());
 
     }
 }
