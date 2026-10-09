@@ -141,6 +141,23 @@ class EmployeeControllerIntegrationTest {
                 .jsonPath("$.firstName").isEqualTo(updatedEmployeeDto.getFirstName())
                 .jsonPath("$.lastName").isEqualTo(updatedEmployeeDto.getLastName())
                 .jsonPath("$.email").isEqualTo(updatedEmployeeDto.getEmail());
+    }
+
+    @Test
+    void testDeleteEmployee() {
+
+        var employeeDto = EmployeeDto.builder()
+                .firstName("Meena")
+                .lastName("Fadatare")
+                .email("meena.fadatare@example.com")
+                .build();
+
+        var savedEmployee = employeeService.saveEmployee(employeeDto).block();
+
+        webTestClient.delete()
+                .uri("/api/employees/{id}", savedEmployee.getId())
+                .exchange()
+                .expectStatus().isNoContent();
 
     }
 }
