@@ -1,7 +1,10 @@
 package net.javaguides.springboot.controller;
 
 import net.javaguides.springboot.dto.EmployeeDto;
+import net.javaguides.springboot.entity.Employee;
+import net.javaguides.springboot.repository.EmployeeRepository;
 import net.javaguides.springboot.service.EmployeeService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +24,15 @@ class EmployeeControllerIntegrationTest {
 
     @Autowired
     WebTestClient webTestClient;
+
+    @Autowired
+    EmployeeRepository employeeRepository;
+
+    @BeforeEach
+    void setUp() {
+        System.out.println("Deleting all employees before each test");
+        employeeRepository.deleteAll().subscribe();
+    }
 
     @Test
     void testSaveEmployee() {
@@ -48,7 +60,7 @@ class EmployeeControllerIntegrationTest {
     }
 
     @Test
-    void testGetEmployee() {
+    void testGetSingleEmployee() {
 
         EmployeeDto employeeDto = EmployeeDto.builder()
                 .firstName("Meena")
@@ -65,8 +77,38 @@ class EmployeeControllerIntegrationTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .consumeWith(System.out::println)
+                .jsonPath("$.id").isEqualTo(savedEmployee.getId())
                 .jsonPath("$.firstName").isEqualTo(savedEmployee.getFirstName())
                 .jsonPath("$.lastName").isEqualTo(savedEmployee.getLastName())
                 .jsonPath("$.email").isEqualTo(savedEmployee.getEmail());
+    }
+
+    @Test
+    void testGetAllEmployees() {
+
+        EmployeeDto employeeDto = EmployeeDto.builder()
+                .firstName("Meena")
+                .lastName("Fadatare")
+                .email("meena.fadatare@example.com")
+                .build();
+
+        employeeService.saveEmployee(employeeDto).block();
+
+        employeeDto = EmployeeDto.builder()
+                .firstName("John")
+                .lastName("Doe")
+                .email("john.doe@example.com")
+                .build();
+
+        employeeService.saveEmployee(employeeDto).block();
+
+        webTestClient.get()
+                .uri("/api/employees")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(EmployeeDto.class)
+                .consumeWith(System.out::println);
+
     }
 }
