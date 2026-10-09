@@ -46,4 +46,27 @@ class EmployeeControllerIntegrationTest {
         ;
 
     }
+
+    @Test
+    void testGetEmployee() {
+
+        EmployeeDto employeeDto = EmployeeDto.builder()
+                .firstName("Meena")
+                .lastName("Fadatare")
+                .email("meena.fadatare@example.com")
+                .build();
+
+        EmployeeDto savedEmployee = employeeService.saveEmployee(employeeDto).block();
+
+        webTestClient.get()
+                .uri("/api/employees/{id}", savedEmployee.getId())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(System.out::println)
+                .jsonPath("$.firstName").isEqualTo(savedEmployee.getFirstName())
+                .jsonPath("$.lastName").isEqualTo(savedEmployee.getLastName())
+                .jsonPath("$.email").isEqualTo(savedEmployee.getEmail());
+    }
 }
